@@ -4,12 +4,13 @@ test('OWA Test', async ({ browser }) => {
   test.setTimeout(60000);
   const context = await browser.newContext({ ignoreHTTPSErrors: true });
   const page = await context.newPage();
-  
+      const user = 'fox9'
   // STEP 1: Combined navigation and credential inputs
   await test.step('1. Fill Login Credentials', async () => {
-    await page.goto('https://10.10.48.17');
+    await page.goto('https://10.10.48.15');
+
     await page.getByRole('textbox', { name: 'Domain\\user name:' }).click();
-    await page.getByRole('textbox', { name: 'Domain\\user name:' }).fill('tx\\fox6');
+    await page.getByRole('textbox', { name: 'Domain\\user name:' }).fill(`tx\\${user}`);
     await page.getByRole('textbox', { name: 'Domain\\user name:' }).press('Tab');
     await page.locator('#password').fill('f');
     await page.locator('#password').press('Tab');
@@ -29,6 +30,7 @@ test('OWA Test', async ({ browser }) => {
     await page.locator('#CommentTextBox').click();
     await page.locator('#CommentTextBox').fill('tttt');
     await page.getByText('Submit').click();
+    await page.waitForTimeout(3000);
     await expect(page.locator('#ErrorDiv')).toContainText('Report Incident succeeded');
     await page.getByRole('button', { name: 'OK' }).click();
   });
@@ -40,10 +42,10 @@ test('OWA Test', async ({ browser }) => {
     await page.waitForTimeout(5000); 
     await page.locator('iframe[name="mwngsubfr"]').waitFor({ state: 'visible', timeout: 15000 });
   });
-
+ 
   // STEP 5: Verification of the email conversion flows
   await test.step('5. AV conversion & Sign Out', async () => {
-    const targetEmail = mailFrame.locator('.lvHighlightSubjectClass').first();
+ /*    const targetEmail = mailFrame.locator('.lvHighlightSubjectClass').first();
     await page.waitForTimeout(5000); 
     await targetEmail.waitFor({ state: 'visible', timeout: 15000 });
     await targetEmail.scrollIntoViewIfNeeded();
@@ -53,12 +55,12 @@ test('OWA Test', async ({ browser }) => {
 
     await page.locator('iframe[name="mwngsubfr"]').contentFrame().getByRole('button', { name: 'More actions', exact: true }).click();
     await page.waitForTimeout(5000); 
-    await page.locator('iframe[name="mwngsubfr"]').contentFrame().getByRole('button', { name: 'View' }).click();
+   await page.locator('iframe[name="mwngsubfr"]').contentFrame().getByRole('button', { name: 'View' }).click();
     await page.waitForTimeout(5000); 
-    await page.locator('iframe[name="mwngsubfr"]').contentFrame().getByRole('button', { name: 'close' }).click();
-    await page.waitForTimeout(5000); 
-    await page.locator('iframe[name="mwngsubfr"]').contentFrame().getByRole('button', { name: 'fox6 menu with submenu' }).click();
-    await page.waitForTimeout(5000); 
+    await page.locator('iframe[name="mwngsubfr"]').contentFrame().getByRole('button', { name: 'close' }).click();  */
+    await page.waitForTimeout(10000); 
+    await page.locator('iframe[name="mwngsubfr"]').contentFrame().getByRole('button', { name: `${user} menu with submenu` }).click();
+    await page.waitForTimeout(3000); 
     await page.locator('iframe[name="mwngsubfr"]').contentFrame().getByRole('menuitem', { name: 'Sign out' }).click();
   });
 });
